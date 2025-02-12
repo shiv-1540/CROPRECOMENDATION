@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import numpy as np
 import pickle
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load the trained RandomForest model
 with open("RF.pkl", "rb") as model_file:
@@ -19,6 +20,15 @@ class CropInput(BaseModel):
     humidity: float
     ph: float
     rainfall: float
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change this to your frontend domain when deploying (e.g., ["https://yourfrontend.com"])
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Prediction endpoint
 @app.post("/predict")
